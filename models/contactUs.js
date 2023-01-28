@@ -1,37 +1,33 @@
-/*var Request = require('tedious').Request;
-var TYPES = require('tedious').TYPES;
-var dbObject=require('./dbConnection.js');
-
+var mysql= require('mysql');
+require('dotenv').config();
+var con= mysql.createConnection({
+    host:process.env.HOST,
+    user:process.env.DBUSERNAME,
+    password:"",
+    database:process.env.DATABASE
+})
+console.log(con);
+console.log('*****************4444444444444444**********************')
 
 const insertContactUsData= (req,res) =>{
-    
-   // console.log(Connection)
-    console.log("***************************************")
-    console.log(req.body)
-    
-    var firstName =req.body.firstName;
-    var lastName=req.body.lastName;
-    var email=req.body.email;
-    var phoneNumber=req.body.phone;
-    var message =req.body.message;
-    console.log(phoneNumber)
-    //dbObject.openDbConnection();
-    var sql='INSERT INTO ContactUS (FirstName,Email,LastName,PhoneNumber,Message) VALUES (@firstName,@email,@lastName,@phoneNumber,@message)';
-    const request = new Request(sql,(err, rowCount , rows) => {
-        if (err) {
-            console.log(err)
-        throw err;
-        }
-    });
-request.addParameter('firstName', TYPES.NVarChar, firstName);
-request.addParameter('email', TYPES.NVarChar, email);
-request.addParameter('lastName', TYPES.NVarChar, lastName);
-request.addParameter('phoneNumber', TYPES.Int, phoneNumber);
-request.addParameter('message', TYPES.NVarChar, message);
-var connection=dbObject.openDbConnection(res,request);
-//dbObject.insertDataToTable(res,request,connection);
-
-res.send('MF000')
+    var sql="INSERT INTO ContactUS (firstName,lastName,email,phone,message) VALUES (?,?,?,?,?)"
+    con.query(sql,[req.body.firstName,req.body.lastName,req.body.email,req.body.phone,req.body.message],function(err,result){
+        if(err) throw err;
+});
+    res.send('MF000')
 };
 
-module.exports.insertContactUsData = insertContactUsData;*/
+const subscribe =(req,res) =>{
+    var date= new Date(Date.now());
+    var sql ="INSERT INTO Subscribe (email,subscribedOn,active) VALUES(?,?,?)"
+    //console.log(req.body.email);
+    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    console.log(sql)
+    con.query(sql,[req.body.email, date,1],function(err,result){
+        if(err) throw err;
+    })
+    //con.end();
+    res.send('MF005');
+}
+module.exports.insertContactUsData = insertContactUsData;
+module.exports.subscribe = subscribe;  

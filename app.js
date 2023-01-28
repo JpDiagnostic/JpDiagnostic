@@ -1,8 +1,7 @@
 const express = require('express');
 const path =require('path');
 const app =express();
-//const contactUs=require('./models/contactUs');
-//var nodemailer = require('nodemailer');
+const contactUs=require('./models/contactUs');
 
 app.set('view engine','ejs');
 app.set('views',path.join(__dirname,'views'))
@@ -13,7 +12,7 @@ app.use(express.static('images'))
 app.use(express.static('fonts'))
 
 
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
     //console.log(process.env.PORT);
 })
 
@@ -84,7 +83,6 @@ app.get('/', (req,res)=> {
      res.render("departments")
  })
 
-
  app.get('/forms', (req,res)=> {
      res.render("forms")
  })
@@ -104,10 +102,6 @@ app.get('/', (req,res)=> {
  app.get('/icons', (req,res)=> {
      res.render("icons")
  })
-
- /*app.get('/clients/login', (req,res)=> {
-     res.render("login")
- })*/
 
  app.get('/maintenance', (req,res)=> {
      res.render("maintenance")
@@ -190,8 +184,6 @@ app.post('/contactUs',(req,res)=>{
 });
 
 app.post('/subscribe', (req,res)=>{
-    console.log('subscribed')
-    console.log(req.body.email)
+    contactUs.subscribe(req,res)
     
-
 })
